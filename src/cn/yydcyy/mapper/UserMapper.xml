@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 映射文件中 <mapper>接口代理实现编写规则
+	1 namespace = 全路径名称
+	2 sql语句 = 接口方法名称
+	3 传入参数类型 = 接口方法的传入参数类型
+	4 返回结果集类型 = 接口方法的返回值类型  
+ -->
+<mapper namespace="cn.yydcyy.mapper.UserMapper">
+	<select id="findUserById" parameterType="java.lang.Integer" resultType="cn.yydcyy.pojo.User">
+	select * from user where id=#{id}
+	</select>
+	
+	<select id="findUserByUserName" parameterType="java.lang.String" resultType="cn.yydcyy.pojo.User">
+		select * from user where username like '%${value}%'
+	</select>
+
+	<insert id="insertUser" parameterType="cn.yydcyy.pojo.User" >
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into user (username,birthday,sex,address) values(#{username},#{birthday},#{sex},#{address})
+	</insert>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<environments default="development">
+		<environment id="development">
+		<!-- 使用jdbc事务管理-->
+		<transactionManager type="JDBC" />
+		<!-- 数据库连接池-->
+		<dataSource type="POOLED">
+			<property name="driver" value="com.mysql.jdbc.Driver" />
+			<property name="url" value="jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf-8" />
+			<property name="username" value="root" />
+			<property name="password" value="123123" />
+		</dataSource>
+		</environment>
+	</environments>
+	
+	<mappers>
+	<!-- 使用class属性引入"接口的全路径名称"规则:
+			1. 接口.java和映射文件.xml 除扩展名外要完全相同
+			2. 接口和映射文件要放在同一个目录下 -->
+	
+		<mapper resource="config/User.xml"/>
+		<!-- m没引用, 报错 : org.apache.ibatis.binding.BindingException: Type interface cn.yydcyy.mapper.UserMapper is not known to the MapperRegistry.   -->
+		<!-- <mapper class="cn.yydcyy.mapper.UserMapper"/> -->
+			
+		<!-- 包扫描方式 -->
+		<package name="cn.yydcyy.mapper"/>
+	</mappers>
+</configuration>

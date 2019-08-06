@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namesapce : 命名空间, 做sql 隔离 -->
+<mapper namespace="test">
+
+<!-- id : sql 唯一标识, parameterType' : 指定传入参数类型, resultType : 返回结果集类型 #{} 占位符 :起占位作用, 若传入的是java基本数据类型, 那么#{}中的变量名称可以随意写   -->
+	<select id = "findUserById" parameterType="java.lang.Integer" resultType="cn.yydcyy.pojo.User">
+		select * from user where id = #{id}
+	</select>
+	
+	<!-- 如果返回结果为集合,调用selectList方法, 且映射文件中应配置成泛型类型
+		${} 拼接符: 组付出原样拼接. 若传参为Java基本类型, ${}中变量名必须是value
+		提醒:${}拼接符有Sql注入风险, 慎用	  -->
+	<select id="findUserByUserName" parameterType="java.lang.String" resultType="cn.yydcyy.pojo.User">
+		select * from user where username like '%${value}%'
+	</select>
+
+<!-- #{}: 占位符中若传入的是pojo类型, 那么#{}中的变量名称必须是pojo中对应属性.属性.属性....   及一层.一层... 直至最终与数据库对应字段 
+没有返回值, 故没有resultType属性 -->
+		<insert id="insertUser" parameterType="cn.yydcyy.pojo.User">			
+		<!--select LAST_INSERT_ID()是数据库函数, 返回自增主键
+			keyProperty : 返回主键, 放入参数"id"中保存
+			order : 有AFTER / BEFORE 两个属性, 表明函数相对于insert的执行顺序
+			resultType : id / keyProperty 的类型
+		  -->
+				<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+				select LAST_INSERT_ID()
+				</selectKey>
+				insert into user(username, birthday, sex, address)	values(#{username},#{birthday},#{sex},#{address})
+		</insert>
+		
+		
+		<delete id="delUserById" parameterType="java.lang.Integer">
+		   delete from user where id =#{id}
+		</delete>
+		
+		<update id="updateUserById" parameterType="cn.yydcyy.pojo.User">
+			update user set username=#{username}, birthday=#{birthday},sex=#{sex},address=#{address} where id=#{id}
+		</update>
+</mapper>
